@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js";
 import getStarfield from "./starfield.js";
 import { getFresnelMat } from "./frenelmesh.js";
+import moonGroup from "./moon.js";
+import { moonMesh } from "./moon.js";
 
 // Set up the renderer
 const w = window.innerWidth;
@@ -16,7 +18,7 @@ const near = 0.1;
 const aspect = w / h;
 const far = 10;
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-camera.position.z = 2;
+camera.position.z = 4;
 
 // Set up the scene
 const scene = new THREE.Scene();
@@ -39,6 +41,13 @@ const earthGroup = new THREE.Group();
 earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
 earthGroup.add(mesh);
 scene.add(earthGroup);
+
+// setting up the oribtial axis for the moon
+moonGroup.position.set(0, 0, 0); // Set moonGroup at Earth's center
+moonGroup.children[0].position.set(2, 1, 0);
+// adding moonGroup to scene
+
+scene.add(moonGroup);
 
 // Set up the dark side of the earth
 const lightMesh = new THREE.MeshBasicMaterial({
@@ -85,6 +94,9 @@ function animate(t = 0) {
   cloudMesh.rotation.y += 0.0023;
   glowMesh.rotation.y += 0.002;
   stars.rotation.y -= 0.0002;
+  moonGroup.rotation.y += 0.002; 
+  moonMesh.rotation.y += 0.0023/27.3;
+  moonMesh.rotateOnAxis
   controls.update();
   renderer.render(scene, camera);
 }
